@@ -1,8 +1,9 @@
 const $ = (id) => document.getElementById(id);
 const eur = (n) => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 
-function el(tag, props = {}, ...children) {
+function el(tag, { dataset, ...props } = {}, ...children) {
   const e = Object.assign(document.createElement(tag), props);
+  Object.assign(e.dataset, dataset);
   e.append(...children);
   return e;
 }

@@ -27,13 +27,13 @@ function render() {
         catch (e) { showError(e.message); }
       };
       return el("tr", {},
-        el("td", {}, o.date),
-        el("td", { className: income ? "in" : "out" }, o.type),
-        el("td", {}, o.utilisateur),
-        el("td", { className: income ? "in" : "out" }, (income ? "+" : "−") + eur(o.montant)),
-        el("td", {}, o.description),
-        el("td", { className: "effects" }, o.effets),
-        el("td", {}, del));
+        el("td", { dataset: { label: "Date" } }, o.date),
+        el("td", { dataset: { label: "Type" }, className: income ? "in" : "out" }, o.type),
+        el("td", { dataset: { label: "Utilisateur" } }, o.utilisateur),
+        el("td", { dataset: { label: "Montant" }, className: income ? "in" : "out" }, (income ? "+" : "−") + eur(o.montant)),
+        el("td", { dataset: { label: "Description" } }, o.description),
+        el("td", { dataset: { label: "Effet dettes" }, className: "effects" }, o.effets),
+        el("td", { className: "action" }, del));
     })
   );
   updateHint();

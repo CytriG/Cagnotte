@@ -44,6 +44,26 @@ dialog .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16
 button.secondary { background:var(--bg); color:var(--text); border:1px solid var(--border); }
 button:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 .pager { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px; color:var(--muted); font-size:.9rem; }
+.debt { flex:1 1 150px; }
+
+/* Mobile : historique en cartes, textes et marges réduits */
+@media (max-width: 640px) {
+  main { padding:10px; gap:12px; }
+  .card { padding:12px; }
+  .pot { gap:12px; }
+  .pot-icon { width:44px; height:44px; }
+  .pot .amount { font-size:2rem; }
+  form.inline { flex-direction:column; }
+  .downloads { flex-direction:column; gap:4px; }
+  .table-wrap { overflow-x:visible; }
+  table, tbody, tr, td { display:block; }
+  thead { display:none; }
+  tr { position:relative; border:1px solid var(--border); border-radius:8px; padding:8px 40px 8px 10px; margin-bottom:8px; }
+  td { border:0; padding:2px 0; white-space:normal; }
+  td[data-label]::before { content:attr(data-label); display:inline-block; min-width:90px; color:var(--muted); font-size:.8rem; }
+  td.action { position:absolute; top:6px; right:6px; padding:0; }
+  .pager button { padding:8px; font-size:.85rem; }
+}
 .footer { text-align:center; margin:0; }
 .footer a { color:var(--accent); text-decoration:none; }
 button.del { background:transparent; color:var(--muted); padding:2px 8px; }
