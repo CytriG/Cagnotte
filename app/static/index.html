@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cagnotte virtuelle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <section class="card pot">
+      <div class="label">Montant de la cagnotte</div>
+      <div id="pot" class="amount">–</div>
+    </section>
+
+    <section class="card">
+      <h2>Dettes</h2>
+      <div id="debts" class="debts"></div>
+    </section>
+
+    <section class="card">
+      <h2>Nouvelle opération</h2>
+      <form id="op-form" class="grid">
+        <label>Type
+          <select id="op-type">
+            <option value="rentrée">Rentrée d'argent</option>
+            <option value="dépense">Dépense</option>
+          </select>
+        </label>
+        <label>Utilisateur <select id="op-user" required></select></label>
+        <label>Montant (€) <input id="op-amount" type="number" step="0.01" min="0.01" required></label>
+        <label>Date <input id="op-date" type="date" required></label>
+        <label class="wide">Description <input id="op-desc" maxlength="200" required></label>
+        <button class="wide">Enregistrer</button>
+      </form>
+      <p id="hint" class="hint"></p>
+      <p id="error" class="error"></p>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Historique</h2>
+        <div class="downloads">
+          <a href="/api/download/operations.csv">⬇ operations.csv</a>
+          <a href="/api/download/utilisateurs.csv">⬇ utilisateurs.csv</a>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Utilisateur</th><th>Montant</th><th>Description</th><th>Effet sur les dettes</th><th></th></tr></thead>
+          <tbody id="history"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button id="prev" class="secondary" type="button">← Plus récentes</button>
+        <span id="page-info"></span>
+        <button id="next" class="secondary" type="button">Plus anciennes →</button>
+      </div>
+    </section>
+    <p class="footer"><a href="/users.html">Gérer les utilisateurs →</a></p>
+  </main>
+  <script src="common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

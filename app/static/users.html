@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Utilisateurs – Cagnotte virtuelle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <section class="card">
+      <h2>Utilisateurs</h2>
+      <div id="users" class="debts"></div>
+      <form id="user-form" class="inline">
+        <input id="user-name" placeholder="Nouvel utilisateur" maxlength="40" required>
+        <button>Ajouter</button>
+      </form>
+      <p id="error" class="error"></p>
+      <p class="hint">Un utilisateur ne peut être supprimé que s'il n'a ni dette en cours ni opération à son nom.</p>
+    </section>
+    <p class="footer"><a href="/">← Retour à la cagnotte</a></p>
+  </main>
+  <script src="common.js"></script>
+  <script src="users.js"></script>
+</body>
+</html>

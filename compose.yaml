@@ -1,0 +1,12 @@
+# Pour Dockge : remplacer VOTRE_USER_GITHUB par votre pseudo (en minuscules).
+services:
+  cagnotte:
+    image: ghcr.io/VOTRE_USER_GITHUB/cagnottevirtuelle:latest
+    # Pour builder en local à la place : décommenter et retirer "image"
+    # build: .
+    container_name: cagnotte
+    restart: unless-stopped
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./data:/data
