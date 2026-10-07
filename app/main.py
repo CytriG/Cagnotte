@@ -7,7 +7,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, condecimal
 
@@ -246,6 +246,11 @@ def download(name: str):
         with lock:
             write_csv(path, cols, [])
     return FileResponse(path, media_type="text/csv; charset=utf-8", filename=name)
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return RedirectResponse("/icone.svg")
 
 
 app.mount("/", StaticFiles(directory=Path(__file__).parent / "static", html=True), name="static")
