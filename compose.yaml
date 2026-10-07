@@ -1,12 +1,11 @@
-# Pour Dockge : remplacer VOTRE_USER_GITHUB par votre pseudo (en minuscules).
 services:
   cagnotte:
-    image: ghcr.io/VOTRE_USER_GITHUB/cagnottevirtuelle:latest
-    # Pour builder en local à la place : décommenter et retirer "image"
-    # build: .
+    image: ghcr.io/cytrig/cagnotte:latest
     container_name: cagnotte
-    restart: unless-stopped
-    ports:
-      - "8080:8000"
+    environment:
+      - TZ=Europe/Paris
     volumes:
-      - ./data:/data
+      - /mnt/Main/Apps/Apps_Data/cagnotte:/data
+    ports:
+      - 30060:8000 # Port TrueNAS
+    restart: unless-stopped
