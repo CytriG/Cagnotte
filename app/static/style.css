@@ -7,7 +7,8 @@ body { margin:0; background:var(--bg); color:var(--text); font:16px/1.4 system-u
 main { max-width:960px; margin:0 auto; padding:16px; display:grid; gap:16px; }
 .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
 h2 { margin:0 0 12px; font-size:1.1rem; }
-.pot { text-align:center; }
+.pot { display:flex; align-items:center; justify-content:center; gap:20px; text-align:left; }
+.pot-icon { width:84px; height:84px; flex:none; }
 .pot .label { color:var(--muted); }
 .pot .amount { font-size:2.8rem; font-weight:700; }
 .debts { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
