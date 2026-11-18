@@ -1,5 +1,6 @@
 """Cagnotte virtuelle : API + service du front statique. Stockage en CSV lisibles."""
 import csv
+import json
 import os
 import threading
 import datetime as dt
@@ -14,6 +15,7 @@ from pydantic import BaseModel, Field, condecimal
 DATA_DIR = Path(os.environ.get("DATA_DIR", "data"))
 USERS_FILE = DATA_DIR / "utilisateurs.csv"
 OPS_FILE = DATA_DIR / "operations.csv"
+IMPOTS_FILE = DATA_DIR / "impots.json"  # saisies du calculateur « Gain du PACS »
 
 USERS_COLS = ["nom"]
 OPS_COLS = ["id", "date", "type", "utilisateur", "montant_eur", "description", "effets_sur_dettes",
@@ -232,6 +234,33 @@ def delete_operation(op_id: int):
             raise HTTPException(404, "Opération introuvable.")
         fill_snapshots(kept, [r["nom"] for r in read_csv(USERS_FILE)])
         write_csv(OPS_FILE, OPS_COLS, kept)
+    return {"ok": True}
+
+
+@app.get("/api/impots")
+def get_impots():
+    if not IMPOTS_FILE.exists():
+        return {}
+    with lock:
+        return json.loads(IMPOTS_FILE.read_text(encoding="utf-8"))
+
+
+@app.put("/api/impots")
+def save_impots(values: dict[str, float | str | None]):
+    if len(values) > 200 or any(len(k) > 50 or (isinstance(v, str) and len(v) > 50) for k, v in values.items()):
+        raise HTTPException(400, "Données invalides.")
+    with lock:
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        tmp = IMPOTS_FILE.with_suffix(".tmp")
+        tmp.write_text(json.dumps(values, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(IMPOTS_FILE)  # écriture atomique
+    return {"ok": True}
+
+
+@app.delete("/api/impots")
+def reset_impots():
+    with lock:
+        IMPOTS_FILE.unlink(missing_ok=True)
     return {"ok": True}
 
 

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gain du PACS – Cagnotte virtuelle</title>
+  <link rel="icon" type="image/svg+xml" href="/icone.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <nav class="tabs">
+      <a href="/">Cagnotte</a>
+      <a href="/impots.html" class="active">Gain du PACS</a>
+      <a href="/users.html">Utilisateurs</a>
+    </nav>
+
+    <section class="card pot">
+      <img src="/icone.svg" alt="" class="pot-icon" width="56" height="56">
+      <div>
+        <div class="label">Versement dans la cagnotte : gain réel du PACS</div>
+        <div id="gain" class="amount">–</div>
+        <div id="gain-detail" class="hint"></div>
+        <div id="save-status" class="hint"></div>
+      </div>
+    </section>
+
+    <form id="tax-form" class="tax-form">
+      <section class="card">
+        <h2>MD : auto-entrepreneur (déclarant 1)</h2>
+        <div class="grid">
+          <label>Chiffre d'affaires déclaré (€) <input name="md_ca" type="number" step="1" min="0"></label>
+          <label>Activité (pré-remplit les taux)
+            <select name="md_regime">
+              <option value="bnc">BNC</option>
+              <option value="bic_serv">BIC services</option>
+              <option value="bic_vente">BIC vente</option>
+            </select>
+          </label>
+          <label>Abattement forfaitaire (%) <input name="md_abatt_taux" type="number" step="0.1" min="0" max="100"></label>
+          <label>Abattement minimum (€) <input name="md_abatt_min" type="number" step="1" min="0"></label>
+          <label>Taux du versement libératoire (%) <input name="md_vl_taux" type="number" step="0.1" min="0" max="100"></label>
+        </div>
+        <h3>Droit au versement libératoire (MD seul(e))</h3>
+        <div class="grid">
+          <label>RFR N-2 de MD seul(e) (€, vide = estimé) <input name="md_rfr" type="number" step="1" min="0"></label>
+          <label>Plafond RFR par part (€) <input name="vl_plafond_rfr" type="number" step="1" min="0"></label>
+          <label>Plafond de CA micro (€) <input name="md_plafond_ca" type="number" step="1" min="0"></label>
+        </div>
+        <p class="hint" id="vl-status"></p>
+        <p class="hint" id="md-hint"></p>
+      </section>
+
+      <section class="card">
+        <h2>CT : salarié (déclarant 2)</h2>
+        <div class="grid">
+          <label>Salaires déclarés (€) <input name="ct_salaires" type="number" step="1" min="0"></label>
+          <label>Frais réels (€, vide = déduction forfaitaire) <input name="ct_frais_reels" type="number" step="1" min="0"></label>
+          <label>Déduction forfaitaire (%) <input name="frais_taux" type="number" step="0.1" min="0" max="100"></label>
+          <label>Déduction forfaitaire : minimum (€) <input name="frais_min" type="number" step="1"></label>
+          <label>Déduction forfaitaire : maximum (€) <input name="frais_max" type="number" step="1"></label>
+        </div>
+        <p class="hint" id="ct-hint"></p>
+      </section>
+
+      <section class="card">
+        <h2>Revenus du foyer</h2>
+        <div class="duo">
+          <span class="duo-corner"></span><span class="duo-h">MD</span><span class="duo-h">CT</span><span class="duo-h">Pacsés</span>
+
+          <span class="duo-label">Revenus fonciers SCPI (€)</span>
+          <input name="fonc_md" type="number" step="1" min="0" aria-label="Revenus fonciers SCPI de MD">
+          <input name="fonc_ct" type="number" step="1" min="0" aria-label="Revenus fonciers SCPI de CT">
+          <output id="tot-fonc" class="duo-total"></output>
+
+          <span class="duo-label">Taux moyen SCPI (%)</span>
+          <input name="fonc_taux_md" type="number" step="0.1" min="0" max="100" aria-label="Taux moyen SCPI de MD seul(e)">
+          <input name="fonc_taux_ct" type="number" step="0.1" min="0" max="100" aria-label="Taux moyen SCPI de CT seul(e)">
+          <input name="fonc_taux" type="number" step="0.1" min="0" max="100" aria-label="Taux moyen SCPI des pacsés">
+
+          <span class="duo-label">Revenus de capitaux (€)</span>
+          <input name="cap_md" type="number" step="1" min="0" aria-label="Revenus de capitaux de MD">
+          <input name="cap_ct" type="number" step="1" min="0" aria-label="Revenus de capitaux de CT">
+          <output id="tot-cap" class="duo-total"></output>
+
+          <span class="duo-label">Taux forfaitaire PFU (%)</span>
+          <input name="cap_taux_md" type="number" step="0.1" min="0" max="100" aria-label="Taux forfaitaire PFU de MD seul(e)">
+          <input name="cap_taux_ct" type="number" step="0.1" min="0" max="100" aria-label="Taux forfaitaire PFU de CT seul(e)">
+          <input name="cap_taux" type="number" step="0.1" min="0" max="100" aria-label="Taux forfaitaire PFU des pacsés">
+
+          <span class="duo-label">Gains d'assurance vie rachetés (€)</span>
+          <input name="av_md" type="number" step="1" min="0" aria-label="Gains d'assurance vie de MD">
+          <input name="av_ct" type="number" step="1" min="0" aria-label="Gains d'assurance vie de CT">
+          <output id="tot-av" class="duo-total"></output>
+
+          <span class="duo-label">Abattement assurance vie (€)</span>
+          <input name="av_abatt_md" type="number" step="1" min="0" aria-label="Abattement assurance vie de MD seul(e)">
+          <input name="av_abatt_ct" type="number" step="1" min="0" aria-label="Abattement assurance vie de CT seul(e)">
+          <input name="av_abatt" type="number" step="1" min="0" aria-label="Abattement assurance vie des pacsés">
+
+          <span class="duo-label">Taux assurance vie (%)</span>
+          <input name="av_taux_md" type="number" step="0.1" min="0" max="100" aria-label="Taux assurance vie de MD seul(e)">
+          <input name="av_taux_ct" type="number" step="0.1" min="0" max="100" aria-label="Taux assurance vie de CT seul(e)">
+          <input name="av_taux" type="number" step="0.1" min="0" max="100" aria-label="Taux assurance vie des pacsés">
+
+          <span class="duo-label">Plus-values foncières nettes (€)</span>
+          <input name="pv_md" type="number" step="1" min="0" aria-label="Plus-values foncières de MD">
+          <input name="pv_ct" type="number" step="1" min="0" aria-label="Plus-values foncières de CT">
+          <output id="tot-pvf" class="duo-total"></output>
+
+          <span class="duo-label">Taux plus-values foncières (%)</span>
+          <input name="pv_taux_md" type="number" step="0.1" min="0" max="100" aria-label="Taux plus-values de MD seul(e)">
+          <input name="pv_taux_ct" type="number" step="0.1" min="0" max="100" aria-label="Taux plus-values de CT seul(e)">
+          <input name="pv_taux" type="number" step="0.1" min="0" max="100" aria-label="Taux plus-values des pacsés">
+        </div>
+        <p class="hint">Les fonciers SCPI sont imposés au taux moyen de chaque scénario. Les capitaux sont imposés au
+          taux forfaitaire de chaque scénario. Assurance vie (contrats de plus de 8 ans) : impôt = (gains − abattement) × taux,
+          avec un abattement de 4 600 € seul et 9 200 € en couple, et un taux de 7,5 % (12,8 % pour la part des primes
+          au-delà de 150 000 € ou pour un contrat de moins de 8 ans). Plus-values foncières (y compris cessions d'immeubles
+          par les SCPI) : montant net après abattements pour durée de détention, imposé à 19 %. Cet impôt est payé à la
+          source par le notaire ou la SCPI : reportez-le dans « Déjà payé ». Les prélèvements sociaux (17,2 %) ne dépendent pas du PACS et sont ignorés.</p>
+      </section>
+
+      <section class="card">
+        <h2>Dons aux œuvres</h2>
+        <div class="duo">
+          <span class="duo-corner"></span><span class="duo-h">MD</span><span class="duo-h">CT</span><span class="duo-h">Pacsés</span>
+
+          <span class="duo-label">Dons (€)</span>
+          <input name="dons_md" type="number" step="1" min="0" aria-label="Dons de MD">
+          <input name="dons_ct" type="number" step="1" min="0" aria-label="Dons de CT">
+          <output id="tot-dons" class="duo-total"></output>
+
+          <span class="duo-label">Taux de réduction (%)</span>
+          <input name="dons_taux" type="number" step="1" min="0" max="100" class="duo-common" aria-label="Taux de réduction des dons">
+          <span class="duo-note">commun à tous</span>
+        </div>
+        <p class="hint">En couple, la réduction porte sur le total des dons. Seul, chacun déduit ses propres dons de son
+          impôt, dans la limite de ce qu'il doit (la réduction n'est pas remboursable).</p>
+      </section>
+
+      <section class="card">
+        <h2>Déjà payé</h2>
+        <div class="duo">
+          <span class="duo-corner"></span><span class="duo-h">MD</span><span class="duo-h">CT</span><span class="duo-h">Total</span>
+
+          <span class="duo-label">Prélevé à la source (€)</span>
+          <input name="paye_md_pas" type="number" step="1" min="0" aria-label="MD : prélevé à la source">
+          <input name="paye_ct_pas" type="number" step="1" min="0" aria-label="CT : prélevé à la source">
+          <output id="tot-pas" class="duo-total"></output>
+
+          <span class="duo-label">Acomptes prélevés sur le compte (€)</span>
+          <input name="paye_md_acomptes" type="number" step="1" min="0" aria-label="MD : acomptes">
+          <input name="paye_ct_acomptes" type="number" step="1" min="0" aria-label="CT : acomptes">
+          <output id="tot-acomptes" class="duo-total"></output>
+
+          <span class="duo-label">Versements libératoires (€)</span>
+          <input name="paye_md_vl" type="number" step="1" min="0" aria-label="MD : versements libératoires">
+          <input name="paye_ct_vl" type="number" step="1" min="0" aria-label="CT : versements libératoires">
+          <output id="tot-vl" class="duo-total"></output>
+
+          <span class="duo-label">Prélèvement forfaitaire sur capitaux (€)</span>
+          <input name="paye_md_pfu" type="number" step="1" min="0" aria-label="MD : prélèvement forfaitaire déjà versé">
+          <input name="paye_ct_pfu" type="number" step="1" min="0" aria-label="CT : prélèvement forfaitaire déjà versé">
+          <output id="tot-pfu" class="duo-total"></output>
+
+          <span class="duo-label">Avance perçue sur réductions (€, en + sur l'avis)</span>
+          <input name="paye_md_avance" type="number" step="1" min="0" aria-label="MD : avance perçue">
+          <input name="paye_ct_avance" type="number" step="1" min="0" aria-label="CT : avance perçue">
+          <output id="tot-avance" class="duo-total"></output>
+
+          <span class="duo-label">Impôt sur plus-values foncières payé à la source (€)</span>
+          <input name="paye_md_pv" type="number" step="1" min="0" aria-label="MD : impôt sur plus-values payé">
+          <input name="paye_ct_pv" type="number" step="1" min="0" aria-label="CT : impôt sur plus-values payé">
+          <output id="tot-pv" class="duo-total"></output>
+
+          <span class="duo-label">Solde de l'avis, payé ou à payer (€)</span>
+          <input name="paye_md_solde" type="number" step="1" aria-label="MD : solde de l'avis">
+          <input name="paye_ct_solde" type="number" step="1" aria-label="CT : solde de l'avis">
+          <output id="tot-solde" class="duo-total"></output>
+        </div>
+        <p class="hint">Montants à reprendre dans le bloc « Calcul du solde » de l'avis d'impôt. L'avance perçue est de
+          l'argent reçu du fisc en janvier : elle est retranchée de ce qui a été payé. Indiquez pour chacun ce qu'il a
+          réellement payé de sa poche.</p>
+      </section>
+
+      <section class="card">
+        <h2>Paramètres de calcul (barème 2026, revenus 2025)</h2>
+        <div class="grid">
+          <label>Parts du foyer pacsé <input name="parts_couple" type="number" step="0.5" min="1"></label>
+          <label>Parts de MD seul(e) <input name="parts_md" type="number" step="0.5" min="1"></label>
+          <label>Parts de CT seul(e) <input name="parts_ct" type="number" step="0.5" min="1"></label>
+        </div>
+        <h3>Barème progressif (par part)</h3>
+        <div class="grid bareme">
+          <label>Tranche 1 à partir de (€) <input name="t1" type="number" step="1"></label>
+          <label>Taux tranche 1 (%) <input name="r1" type="number" step="0.1" min="0" max="100"></label>
+          <label>Tranche 2 à partir de (€) <input name="t2" type="number" step="1"></label>
+          <label>Taux tranche 2 (%) <input name="r2" type="number" step="0.1" min="0" max="100"></label>
+          <label>Tranche 3 à partir de (€) <input name="t3" type="number" step="1"></label>
+          <label>Taux tranche 3 (%) <input name="r3" type="number" step="0.1" min="0" max="100"></label>
+          <label>Tranche 4 à partir de (€) <input name="t4" type="number" step="1"></label>
+          <label>Taux tranche 4 (%) <input name="r4" type="number" step="0.1" min="0" max="100"></label>
+        </div>
+        <h3>Décote et quotient familial</h3>
+        <div class="grid">
+          <label>Décote : forfait personne seule (€) <input name="decote_seul" type="number" step="1"></label>
+          <label>Décote : forfait couple (€) <input name="decote_couple" type="number" step="1"></label>
+          <label>Décote : coefficient (%) <input name="decote_coef" type="number" step="0.01" min="0" max="100"></label>
+          <label>Plafond par demi-part (€) <input name="plafond_qf" type="number" step="1"></label>
+        </div>
+        <p class="hint">Décote = forfait − coefficient × impôt brut (si positive). Le plafond par demi-part ne joue que
+          si le nombre de parts dépasse 1 (seul) ou 2 (couple).</p>
+        <div class="row sep">
+          <button type="button" id="reset" class="secondary">Réinitialiser le formulaire</button>
+        </div>
+      </section>
+    </form>
+
+    <section class="card">
+      <h2>Détail du calcul</h2>
+      <div class="table-wrap">
+        <table class="results">
+          <thead><tr><th></th><th>Pacsés</th><th>MD seul(e)</th><th>CT seul(e)</th><th>MD + CT seuls</th></tr></thead>
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="explain"></p>
+    </section>
+
+    <section class="card">
+      <h2>Versement dans la cagnotte</h2>
+      <div class="table-wrap">
+        <table class="results">
+          <thead><tr><th></th><th>MD</th><th>CT</th><th>Total</th></tr></thead>
+          <tbody id="payments"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="payments-explain"></p>
+    </section>
+  </main>
+  <script src="common.js"></script>
+  <script src="impots.js"></script>
+</body>
+</html>

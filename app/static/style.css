@@ -66,5 +66,42 @@ button:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 }
 .footer { text-align:center; margin:0; }
 .footer a { color:var(--accent); text-decoration:none; }
+.tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); overflow-x:auto; }
+.tabs a { padding:8px 14px; color:var(--muted); text-decoration:none; border-bottom:2px solid transparent; white-space:nowrap; }
+.tabs a:hover { color:var(--text); }
+.tabs a.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+.tax-form { display:grid; gap:16px; }
+.sep { margin-top:12px; }
+/* Code couleur du calculateur : revenus en rouge, paramètres fiscaux en gris */
+:root { --rev-bg:#fef2f2; --rev-border:#f87171; --param-bg:#eceef1; --param-border:#d1d5db; --param-text:#6b7280; }
+@media (prefers-color-scheme: dark) {
+  :root { --rev-bg:#3a1d20; --rev-border:#b91c1c; --param-bg:#262930; --param-border:#3a3f4a; --param-text:#9aa1ae; }
+}
+input.revenu { background:var(--rev-bg); border-color:var(--rev-border); }
+input.param, select.param { background:var(--param-bg); border-color:var(--param-border); color:var(--param-text); }
+input.revenu:focus, input.param:focus, select.param:focus { outline:2px solid var(--accent); outline-offset:1px; }
+
+/* Saisie côte à côte : une ligne par donnée, colonnes MD | CT | Pacsés */
+.duo { display:grid; grid-template-columns:minmax(150px, 1.3fr) repeat(3, minmax(0, 1fr)); gap:8px 12px; align-items:center; }
+.duo input { width:100%; min-width:0; }
+.duo-h { color:var(--muted); font-size:.85rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.duo-label { font-size:.9rem; color:var(--muted); }
+.duo-total { padding:8px 10px; font-variant-numeric:tabular-nums; color:var(--muted); }
+.duo-total::before { content:"= "; }
+.duo-note { grid-column:span 2; color:var(--muted); font-size:.85rem; font-style:italic; }
+@media (max-width: 640px) {
+  .duo { grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px 8px; }
+  .duo-corner { display:none; }
+  .duo-label { grid-column:1 / -1; margin-top:6px; }
+  .duo-total { padding:8px 4px; }
+}
+h3 { margin:16px 0 8px; font-size:.95rem; color:var(--muted); font-weight:600; }
+table.results td:not(:first-child), table.results th:not(:first-child) { text-align:right; }
+table.results tr.total td { font-weight:700; border-top:2px solid var(--border); }
+@media (max-width: 640px) {
+  table.results td:not(:first-child) { text-align:left; }
+  table.results tr { padding-right:10px; }
+  table.results td:first-child { font-weight:600; margin-bottom:4px; }
+}
 button.del { background:transparent; color:var(--muted); padding:2px 8px; }
 button.del:hover { color:var(--out); }
